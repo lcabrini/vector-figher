@@ -119,11 +119,11 @@ main :: proc() {
 }
 
 draw_editor_grid :: proc() {
-    for y in 0..<i32(100) {
+    for y in 0..=i32(MAP_HEIGHT) {
         rl.DrawLine(MARGIN, MARGIN+y*CELL_SIZE, MARGIN+MAP_WIDTH*CELL_SIZE, MARGIN+y*CELL_SIZE, rl.GRAY)
     }
 
-    for x in 0..<i32(100) {
+    for x in 0..=i32(MAP_WIDTH) {
         rl.DrawLine(MARGIN+x*CELL_SIZE, MARGIN, MARGIN+x*CELL_SIZE, MARGIN+MAP_HEIGHT*CELL_SIZE, rl.GRAY)
     }
 }
