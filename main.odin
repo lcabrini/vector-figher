@@ -67,23 +67,23 @@ main :: proc() {
         case TitleScreen:
         case LevelEditor:
             if rl.IsKeyDown(.UP) {
-                level_editor.camera.offset.y -=1
-                level_editor.camera.target.y -= CELL_SIZE
+                level_editor.camera.offset.y -= 0.5
+                level_editor.camera.target.y -= CELL_SIZE/2
             }
 
             if rl.IsKeyDown(.DOWN) {
-                level_editor.camera.offset.y += 1
-                level_editor.camera.target.y += CELL_SIZE
+                level_editor.camera.offset.y += 0.5
+                level_editor.camera.target.y += CELL_SIZE/2
             }
 
             if rl.IsKeyDown(.LEFT) {
-                level_editor.camera.offset.x -= 1
-                level_editor.camera.target.x -= CELL_SIZE
+                level_editor.camera.offset.x -= 0.5
+                level_editor.camera.target.x -= CELL_SIZE/2
             }
 
             if rl.IsKeyDown(.RIGHT) {
-                level_editor.camera.offset.x += 1
-                level_editor.camera.target.x += CELL_SIZE
+                level_editor.camera.offset.x += 0.5
+                level_editor.camera.target.x += CELL_SIZE/2
             }
         case Game:
         }
