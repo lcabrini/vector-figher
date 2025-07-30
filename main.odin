@@ -100,14 +100,8 @@ main :: proc() {
 
             if rl.IsMouseButtonPressed(rl.MouseButton.LEFT) {
                 mp := rl.GetMousePosition()
-                if mp.x > f32(settings.screen_width) - 100 {
-                    if mp.y < CELL_SIZE {
-                        if mp.x > f32(settings.screen_width) - 100  && mp.x < f32(settings.screen_width - 50) {
-                            level_editor.current_tile = EmptyTile{}
-                        } else {
-                            level_editor.current_tile = LandTile{}
-                        }
-                    }
+                if mp.x > f32(settings.screen_width-TOOL_SIZE*2+4) {
+                    // get toolbox item
                 } else {
                     cell_x := int(level_editor.camera.offset.x + mp.x / CELL_SIZE)
                     cell_y := int(level_editor.camera.offset.y + mp.y / CELL_SIZE)
@@ -153,7 +147,7 @@ draw_editor_map :: proc(editor: ^LevelEditor) {
             switch tile in editor.level_map[y][x] {
             case EmptyTile:
             case LandTile:
-                rl.DrawRectangleLines(MARGIN+x*CELL_SIZE, MARGIN+y*CELL_SIZE, CELL_SIZE, CELL_SIZE, rl.RED)
+                rl.DrawRectangle(MARGIN+x*CELL_SIZE, MARGIN+y*CELL_SIZE, CELL_SIZE, CELL_SIZE, rl.RED)
             }
         }
     }
@@ -166,4 +160,8 @@ draw_editor_toolbox :: proc(editor: ^LevelEditor, settings: ^Settings) {
     for y: i32 = 1; y < settings.screen_height-1; y += TOOL_SIZE {
         rl.DrawLine(settings.screen_width-TOOL_SIZE*2-3, y, settings.screen_width-1, y, rl.WHITE)
     }
+}
+
+get_toolbox_position :: proc() {
+    
 }
