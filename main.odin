@@ -3,9 +3,9 @@ package main
 import "core:math"
 import rl "vendor:raylib"
 
-CELL_SIZE :: 20
-MAP_WIDTH :: 1000
-MAP_HEIGHT :: 1000
+CELL_SIZE :: 64
+MAP_WIDTH :: 400
+MAP_HEIGHT :: 200
 
 Ship :: struct {
     pos: rl.Vector2,
@@ -13,9 +13,13 @@ Ship :: struct {
     a: f32,
 }
 
+Tile :: struct {}
+
 TitleScreen :: struct {}
 
-LevelEditor :: struct {}
+LevelEditor :: struct {
+    level: [MAP_HEIGHT][MAP_WIDTH]Tile,
+}
 
 Game :: struct {}
 
