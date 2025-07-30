@@ -6,6 +6,7 @@ import rl "vendor:raylib"
 CELL_SIZE :: 64
 MAP_WIDTH :: 400
 MAP_HEIGHT :: 200
+MARGIN :: 10
 
 Ship :: struct {
     pos: rl.Vector2,
@@ -50,6 +51,8 @@ main :: proc() {
             level_editor.level_map[y][x] = EmptyTile{}
         }
     }
+
+    // Temporary
     level_editor.level_map[2][3] = LandTile{}
 
     game_state: GameState = level_editor
@@ -74,11 +77,11 @@ main :: proc() {
 
 draw_editor_grid :: proc() {
     for y in 0..<i32(100) {
-        rl.DrawLine(10, 10+y*CELL_SIZE, 10+MAP_WIDTH*CELL_SIZE, 10+y*CELL_SIZE, rl.GRAY)
+        rl.DrawLine(MARGIN, MARGIN+y*CELL_SIZE, MARGIN+MAP_WIDTH*CELL_SIZE, MARGIN+y*CELL_SIZE, rl.GRAY)
     }
 
     for x in 0..<i32(100) {
-        rl.DrawLine(10+x*CELL_SIZE, 10, 10+x*CELL_SIZE, 10+MAP_HEIGHT*CELL_SIZE, rl.GRAY)
+        rl.DrawLine(MARGIN+x*CELL_SIZE, MARGIN, MARGIN+x*CELL_SIZE, MARGIN+MAP_HEIGHT*CELL_SIZE, rl.GRAY)
     }
 }
 
@@ -88,7 +91,7 @@ draw_editor_map :: proc(editor: ^LevelEditor) {
             switch tile in editor.level_map[y][x] {
             case EmptyTile:
             case LandTile:
-                rl.DrawRectangle(10+x*CELL_SIZE, 10+y*CELL_SIZE, CELL_SIZE, CELL_SIZE, rl.RED)
+                rl.DrawRectangle(MARGIN+x*CELL_SIZE, MARGIN+y*CELL_SIZE, CELL_SIZE, CELL_SIZE, rl.RED)
             }
         }
     }
