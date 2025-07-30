@@ -8,6 +8,11 @@ MAP_WIDTH :: 400
 MAP_HEIGHT :: 200
 MARGIN :: 10
 
+Settings :: struct {
+    screen_width: i32,
+    screen_height: i32,
+}
+
 Ship :: struct {
     pos: rl.Vector2,
     v: rl.Vector2,
@@ -40,9 +45,14 @@ GameState :: union {
 }
 
 main :: proc() {
+    settings := Settings{
+        screen_width = 1024,
+        screen_height = 768,
+    }
+
     rl.SetTraceLogLevel(.ERROR)
     rl.SetConfigFlags({.VSYNC_HINT})
-    rl.InitWindow(1024, 768, "Vector Fighter")
+    rl.InitWindow(settings.screen_width, settings.screen_height, "Vector Fighter")
     rl.SetTargetFPS(60)
 
     level_editor := LevelEditor{}
