@@ -108,6 +108,7 @@ main :: proc() {
             draw_editor_grid()
             draw_editor_map(&level_editor)
             rl.EndMode2D()
+            draw_editor_toolbox(&level_editor, &settings)
         case Game:
         }
 
@@ -137,4 +138,8 @@ draw_editor_map :: proc(editor: ^LevelEditor) {
             }
         }
     }
+}
+
+draw_editor_toolbox :: proc(editor: ^LevelEditor, settings: ^Settings) {
+    rl.DrawRectangle(settings.screen_width - 100, 0, 200, settings.screen_height, rl.BLUE)
 }
