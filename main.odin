@@ -13,12 +13,20 @@ Ship :: struct {
     a: f32,
 }
 
-Tile :: struct {}
+EmptyTile :: struct {}
+
+LandTile :: struct {}
+
+Tile :: union {
+    EmptyTile,
+    LandTile,
+}
 
 TitleScreen :: struct {}
 
 LevelEditor :: struct {
-    level: [MAP_HEIGHT][MAP_WIDTH]Tile,
+    current_tile: Tile,
+    level_map: [MAP_HEIGHT][MAP_WIDTH]Tile,
 }
 
 Game :: struct {}
@@ -34,6 +42,14 @@ main :: proc() {
     rl.SetConfigFlags({.VSYNC_HINT})
     rl.InitWindow(1024, 768, "Vector Fighter")
     rl.SetTargetFPS(60)
+
+    editor := LevelEditor{}
+    editor.current_tile = EmptyTile{}
+    for y in 0..<MAP_HEIGHT {
+        for x in 0..<MAP_WIDTH {
+            editor.level_map[y][x] = EmptyTile{}
+        }
+    }
 
     game_state: GameState = LevelEditor{}
 
