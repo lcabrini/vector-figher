@@ -28,6 +28,7 @@ TitleScreen :: struct {}
 LevelEditor :: struct {
     current_tile: Tile,
     level_map: [MAP_HEIGHT][MAP_WIDTH]Tile,
+    camera: rl.Camera2D,
 }
 
 Game :: struct {}
@@ -46,6 +47,10 @@ main :: proc() {
 
     level_editor := LevelEditor{}
     level_editor.current_tile = EmptyTile{}
+    level_editor.camera = rl.Camera2D{}
+    level_editor.camera.zoom = 1
+    level_editor.camera.offset = {0, 0}
+    level_editor.camera.target = {0, 0}
     for y in 0..<MAP_HEIGHT {
         for x in 0..<MAP_WIDTH {
             level_editor.level_map[y][x] = EmptyTile{}
@@ -58,14 +63,41 @@ main :: proc() {
     game_state: GameState = level_editor
 
     for !rl.WindowShouldClose() {
+        switch &s in game_state {
+        case TitleScreen:
+        case LevelEditor:
+            if rl.IsKeyDown(.UP) {
+                level_editor.camera.offset.y -=1
+                level_editor.camera.target.y -= CELL_SIZE
+            }
+
+            if rl.IsKeyDown(.DOWN) {
+                level_editor.camera.offset.y += 1
+                level_editor.camera.target.y += CELL_SIZE
+            }
+
+            if rl.IsKeyDown(.LEFT) {
+                level_editor.camera.offset.x -= 1
+                level_editor.camera.target.x -= CELL_SIZE
+            }
+
+            if rl.IsKeyDown(.RIGHT) {
+                level_editor.camera.offset.x += 1
+                level_editor.camera.target.x += CELL_SIZE
+            }
+        case Game:
+        }
+
         rl.BeginDrawing()
         rl.ClearBackground(rl.BLACK)
 
         switch &s in game_state {
         case TitleScreen:
         case LevelEditor:
+            rl.BeginMode2D(level_editor.camera)
             draw_editor_grid()
             draw_editor_map(&level_editor)
+            rl.EndMode2D()
         case Game:
         }
 
