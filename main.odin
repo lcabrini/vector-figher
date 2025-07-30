@@ -1,5 +1,6 @@
 package main
 
+import "core:fmt"
 import "core:math"
 import rl "vendor:raylib"
 
@@ -94,6 +95,23 @@ main :: proc() {
             if rl.IsKeyDown(.RIGHT) {
                 level_editor.camera.offset.x += 0.5
                 level_editor.camera.target.x += CELL_SIZE/2
+            }
+
+            if rl.IsMouseButtonPressed(rl.MouseButton.LEFT) {
+                mp := rl.GetMousePosition()
+                if mp.x > f32(settings.screen_width) - 100 {
+                    if mp.y < CELL_SIZE {
+                        if mp.x > f32(settings.screen_width) - 100  && mp.x < f32(settings.screen_width - 50) {
+                            level_editor.current_tile = EmptyTile{}
+                        } else {
+                            level_editor.current_tile = LandTile{}
+                        }
+                    }
+                } else {
+                    cell_x := int(level_editor.camera.offset.x + mp.x / CELL_SIZE)
+                    cell_y := int(level_editor.camera.offset.y + mp.y / CELL_SIZE)
+                    level_editor.level_map[cell_y][cell_x] = level_editor.current_tile
+                }
             }
         case Game:
         }
