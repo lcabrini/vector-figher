@@ -141,5 +141,9 @@ draw_editor_map :: proc(editor: ^LevelEditor) {
 }
 
 draw_editor_toolbox :: proc(editor: ^LevelEditor, settings: ^Settings) {
-    rl.DrawRectangle(settings.screen_width - 100, 0, 200, settings.screen_height, rl.BLUE)
+    rl.DrawRectangle(settings.screen_width - 100, 0, 100, settings.screen_height, rl.BLUE)
+    rl.DrawLine(settings.screen_width - 50, 0, settings.screen_width - 50, settings.screen_height, rl.WHITE)
+    for y: i32 = 0; y < settings.screen_height; y += CELL_SIZE {
+        rl.DrawLine(settings.screen_width - 100, y, settings.screen_width, y, rl.WHITE)
+    }
 }
