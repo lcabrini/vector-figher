@@ -8,6 +8,7 @@ CELL_SIZE :: 64
 MAP_WIDTH :: 400
 MAP_HEIGHT :: 200
 MARGIN :: 10
+TOOL_SIZE :: 30
 
 Settings :: struct {
     screen_width: i32,
@@ -152,16 +153,17 @@ draw_editor_map :: proc(editor: ^LevelEditor) {
             switch tile in editor.level_map[y][x] {
             case EmptyTile:
             case LandTile:
-                rl.DrawRectangle(MARGIN+x*CELL_SIZE, MARGIN+y*CELL_SIZE, CELL_SIZE, CELL_SIZE, rl.RED)
+                rl.DrawRectangleLines(MARGIN+x*CELL_SIZE, MARGIN+y*CELL_SIZE, CELL_SIZE, CELL_SIZE, rl.RED)
             }
         }
     }
 }
 
 draw_editor_toolbox :: proc(editor: ^LevelEditor, settings: ^Settings) {
-    rl.DrawRectangle(settings.screen_width - 100, 0, 100, settings.screen_height, rl.BLUE)
-    rl.DrawLine(settings.screen_width - 50, 0, settings.screen_width - 50, settings.screen_height, rl.WHITE)
-    for y: i32 = 0; y < settings.screen_height; y += CELL_SIZE {
-        rl.DrawLine(settings.screen_width - 100, y, settings.screen_width, y, rl.WHITE)
+    rl.DrawRectangleLines(settings.screen_width-TOOL_SIZE*2-4, 0, TOOL_SIZE*2+4, settings.screen_height-1, rl.WHITE )
+    rl.DrawRectangle(settings.screen_width-TOOL_SIZE*2-3, 1, TOOL_SIZE*2+2, settings.screen_height-2, rl.BLUE)
+    rl.DrawLine(settings.screen_width-TOOL_SIZE-2, 0, settings.screen_width-TOOL_SIZE-2, settings.screen_height, rl.WHITE)
+    for y: i32 = 1; y < settings.screen_height-1; y += TOOL_SIZE {
+        rl.DrawLine(settings.screen_width-TOOL_SIZE*2-3, y, settings.screen_width-1, y, rl.WHITE)
     }
 }
