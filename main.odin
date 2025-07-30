@@ -43,15 +43,16 @@ main :: proc() {
     rl.InitWindow(1024, 768, "Vector Fighter")
     rl.SetTargetFPS(60)
 
-    editor := LevelEditor{}
-    editor.current_tile = EmptyTile{}
+    level_editor := LevelEditor{}
+    level_editor.current_tile = EmptyTile{}
     for y in 0..<MAP_HEIGHT {
         for x in 0..<MAP_WIDTH {
-            editor.level_map[y][x] = EmptyTile{}
+            level_editor.level_map[y][x] = EmptyTile{}
         }
     }
+    level_editor.level_map[2][3] = LandTile{}
 
-    game_state: GameState = LevelEditor{}
+    game_state: GameState = level_editor
 
     for !rl.WindowShouldClose() {
         rl.BeginDrawing()
@@ -61,6 +62,7 @@ main :: proc() {
         case TitleScreen:
         case LevelEditor:
             draw_editor_grid()
+            draw_editor_map(&level_editor)
         case Game:
         }
 
@@ -77,5 +79,17 @@ draw_editor_grid :: proc() {
 
     for x in 0..<i32(100) {
         rl.DrawLine(10+x*CELL_SIZE, 10, 10+x*CELL_SIZE, 10+MAP_HEIGHT*CELL_SIZE, rl.GRAY)
+    }
+}
+
+draw_editor_map :: proc(editor: ^LevelEditor) {
+    for y in 0..<i32(MAP_HEIGHT) {
+        for x in 0..<i32(MAP_WIDTH) {
+            switch tile in editor.level_map[y][x] {
+            case EmptyTile:
+            case LandTile:
+                rl.DrawRectangle(10+x*CELL_SIZE, 10+y*CELL_SIZE, CELL_SIZE, CELL_SIZE, rl.RED)
+            }
+        }
     }
 }
