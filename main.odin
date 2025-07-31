@@ -201,19 +201,51 @@ draw_editor_map :: proc(editor: ^LevelEditor) {
 }
 
 draw_editor_toolbox :: proc(editor: ^LevelEditor, settings: ^Settings) {
+    w := settings.screen_width
+    h := settings.screen_height
     rl.DrawRectangleLines(settings.screen_width-TOOL_SIZE*2, 0, TOOL_SIZE*2, settings.screen_height-1, rl.WHITE)
-    rl.DrawRectangle(settings.screen_width-TOOL_SIZE*2, 1, TOOL_SIZE*2-1, settings.screen_height-2, rl.BLUE)
-    rl.DrawLine(settings.screen_width-TOOL_SIZE, 0, settings.screen_width-TOOL_SIZE, settings.screen_height-1, rl.WHITE)
+    rl.DrawRectangle(w-TOOL_SIZE*2, 1, TOOL_SIZE*2-1, h-2, rl.BLUE)
+    rl.DrawLine(w-TOOL_SIZE, 0, w-TOOL_SIZE, h-1, rl.WHITE)
     for y: i32 = 0; y < settings.screen_height; y += TOOL_SIZE {
-        rl.DrawLine(settings.screen_width-TOOL_SIZE*2, y, settings.screen_width-1, y, rl.WHITE)
+        rl.DrawLine(w-TOOL_SIZE*2, y, w-1, y, rl.WHITE)
     }
 
     for y in 0..<i32(25) do for x in 0..<i32(2) {
         if editor.toolbox[y][x] == editor.current_tile {
-            rl.DrawRectangle(settings.screen_width-TOOL_SIZE*(2-x), y*TOOL_SIZE, TOOL_SIZE-1, TOOL_SIZE-1, rl.ORANGE)
+            rl.DrawRectangle(w-TOOL_SIZE*(2-x), y*TOOL_SIZE, TOOL_SIZE-1, TOOL_SIZE-1, rl.ORANGE)
             break
         }
     }
+
+    rl.DrawRectangle(w-TOOL_SIZE+3, 4, TOOL_SIZE-7, TOOL_SIZE-7, rl.WHITE)
+    x1: f32 = f32(w) - TOOL_SIZE*2 + 3
+    y1: f32 = TOOL_SIZE+4
+    x2: f32 = x1
+    y2: f32 = y1+TOOL_SIZE-8
+    x3: f32 = f32(w) - TOOL_SIZE - 4
+    y3: f32 = y1
+    rl.DrawTriangle({x1, y1}, {x2, y2}, {x3, y3}, rl.WHITE)
+    x1 = f32(w) - TOOL_SIZE+4
+    y1 = TOOL_SIZE+4
+    x2 = f32(w) - 4
+    y2 = y1 + TOOL_SIZE-8
+    x3 = x2
+    y3 = y1
+    rl.DrawTriangle({x1, y1}, {x2, y2}, {x3, y3}, rl.WHITE)
+    x1 = f32(w) - TOOL_SIZE*2 + 3
+    y1 = 2*TOOL_SIZE+4
+    x2 = x1
+    y2 = y1+TOOL_SIZE-8
+    x3 = x1 + TOOL_SIZE - 8
+    y3 = y2
+    rl.DrawTriangle({x1, y1}, {x2, y2}, {x3, y3}, rl.WHITE)
+    x1 = f32(w) - 4
+    y1 = 2*TOOL_SIZE+4
+    x2 = f32(w) - TOOL_SIZE+4
+    y2 = y1+TOOL_SIZE-8
+    x3 = x1
+    y3 = y2
+    rl.DrawTriangle({x1, y1}, {x2, y2}, {x3, y3}, rl.WHITE)
 }
 
 select_tool :: proc(editor: ^LevelEditor, settings: ^Settings) {
