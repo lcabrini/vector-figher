@@ -102,7 +102,7 @@ main :: proc() {
                 level_editor.camera.target.x += CELL_SIZE/2
             }
 
-            if rl.IsMouseButtonPressed(rl.MouseButton.LEFT) {
+            if rl.IsMouseButtonDown(rl.MouseButton.LEFT) {
                 mp := rl.GetMousePosition()
                 if mp.x > f32(settings.screen_width-TOOL_SIZE*2+4) {
                     select_tool(&level_editor, &settings)
