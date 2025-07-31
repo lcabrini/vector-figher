@@ -158,8 +158,7 @@ main :: proc() {
                         cx := f32(MARGIN+x*CELL_SIZE) + CELL_SIZE/2
                         cy := f32(MARGIN+y*CELL_SIZE) + CELL_SIZE/4
                         tile.angle = math.atan2(mp.y-cy, mp.x-cx)
-                        if tile.angle < 0 do tile.angle = 0
-                        if tile.angle > math.PI do tile.angle = math.PI
+                        if tile.angle < 0 do tile.angle = cx < mp.x ? 0 : math.PI
                     case EmptyTile:
                     case LandTile:
                     case NWTriangleTile:
