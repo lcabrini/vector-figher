@@ -152,8 +152,6 @@ main :: proc() {
             for y in 0..<MAP_HEIGHT do for x in 0..<MAP_WIDTH {
                 switch &tile in level_editor.level_map[y][x] {
                     case TopCannonTile:
-                        //cell_x := int(level_editor.camera.target.x + mp.x) / (CELL_SIZE+1)
-                        //cell_y := int(level_editor.camera.target.y + mp.y) / (CELL_SIZE+1)
                         ox := level_editor.camera.target.x
                         oy := level_editor.camera.offset.y
                         mp := rl.GetMousePosition() + {ox, oy}
