@@ -101,7 +101,7 @@ main :: proc() {
             if rl.IsMouseButtonPressed(rl.MouseButton.LEFT) {
                 mp := rl.GetMousePosition()
                 if mp.x > f32(settings.screen_width-TOOL_SIZE*2+4) {
-                    // get toolbox item
+                    select_tool(&level_editor, &settings)
                 } else {
                     cell_x := int(level_editor.camera.offset.x + mp.x / CELL_SIZE)
                     cell_y := int(level_editor.camera.offset.y + mp.y / CELL_SIZE)
@@ -162,6 +162,14 @@ draw_editor_toolbox :: proc(editor: ^LevelEditor, settings: ^Settings) {
     }
 }
 
-get_toolbox_position :: proc() {
-    
+select_tool :: proc(editor: ^LevelEditor, settings: ^Settings) {
+    mp := rl.GetMousePosition()
+    x := 1 - (settings.screen_width - i32(mp.x)) / TOOL_SIZE
+    y := i32(mp.y) / TOOL_SIZE
+    tool: [2]i32 = {x, y}
+
+    switch tool {
+        case {0, 0}: editor.current_tile = EmptyTile{}
+        case {1, 0}: editor.current_tile = LandTile{}
+    }
 }
