@@ -22,12 +22,19 @@ Ship :: struct {
 }
 
 EmptyTile :: struct {}
-
 LandTile :: struct {}
+NWTriangleTile :: struct {}
+NETriangleTile :: struct {}
+SWTriangleTile :: struct {}
+SETriangleTile :: struct {}
 
 Tile :: union {
     EmptyTile,
     LandTile,
+    NWTriangleTile,
+    NETriangleTile,
+    SWTriangleTile,
+    SETriangleTile,
 }
 
 TitleScreen :: struct {}
@@ -148,6 +155,38 @@ draw_editor_map :: proc(editor: ^LevelEditor) {
             case EmptyTile:
             case LandTile:
                 rl.DrawRectangle(MARGIN+x*CELL_SIZE, MARGIN+y*CELL_SIZE, CELL_SIZE, CELL_SIZE, rl.RED)
+            case NWTriangleTile:
+                x1 := f32(MARGIN+x*CELL_SIZE)
+                y1 := f32(MARGIN+y*CELL_SIZE)
+                x2 := x1
+                y2 := y1+CELL_SIZE
+                x3 := x1+CELL_SIZE
+                y3 := y1
+                rl.DrawTriangle({x1, y1}, {x2, y2}, {x3, y3}, rl.RED)
+            case NETriangleTile:
+                x1 := f32(MARGIN+x*CELL_SIZE)
+                y1 := f32(MARGIN+y*CELL_SIZE)
+                x2 := x1+CELL_SIZE
+                y2 := y1+CELL_SIZE
+                x3 := x1+CELL_SIZE
+                y3 := y1
+                rl.DrawTriangle({x1, y1}, {x2, y2}, {x3, y3}, rl.RED)
+            case SWTriangleTile:
+                x1 := f32(MARGIN+x*CELL_SIZE)
+                y1 := f32(MARGIN+y*CELL_SIZE)
+                x2 := x1
+                y2 := y1+CELL_SIZE
+                x3 := x1+CELL_SIZE
+                y3 := y2
+                rl.DrawTriangle({x1, y1}, {x2, y2}, {x3, y3}, rl.RED)
+            case SETriangleTile:
+                x1 := f32(MARGIN+x*CELL_SIZE) + CELL_SIZE
+                y1 := f32(MARGIN+y*CELL_SIZE)
+                x2 := x1-CELL_SIZE
+                y2 := y1+CELL_SIZE
+                x3 := x1
+                y3 := y2
+                rl.DrawTriangle({x1, y1}, {x2, y2}, {x3, y3}, rl.RED)
             }
         }
     }
@@ -171,5 +210,9 @@ select_tool :: proc(editor: ^LevelEditor, settings: ^Settings) {
     switch tool {
         case {0, 0}: editor.current_tile = EmptyTile{}
         case {1, 0}: editor.current_tile = LandTile{}
+        case {0, 1}: editor.current_tile = NWTriangleTile{}
+        case {1, 1}: editor.current_tile = NETriangleTile{}
+        case {0, 2}: editor.current_tile = SWTriangleTile{}
+        case {1, 2}: editor.current_tile = SETriangleTile{}
     }
 }
