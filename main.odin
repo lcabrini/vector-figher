@@ -28,6 +28,11 @@ NETriangleTile :: struct {}
 SWTriangleTile :: struct {}
 SETriangleTile :: struct {}
 
+TopCannonTile :: struct {
+    angle: f32,
+    angle_dir: f32,
+}
+
 Tile :: union {
     EmptyTile,
     LandTile,
@@ -35,6 +40,7 @@ Tile :: union {
     NETriangleTile,
     SWTriangleTile,
     SETriangleTile,
+    TopCannonTile,
 }
 
 TitleScreen :: struct {}
@@ -66,6 +72,7 @@ main :: proc() {
     rl.SetTargetFPS(60)
 
     level_editor := LevelEditor{}
+    //level_editor.level_map = make()
     init_toolbox(&level_editor)
     level_editor.current_tile = EmptyTile{}
     level_editor.camera = rl.Camera2D{}
@@ -126,6 +133,22 @@ main :: proc() {
         case Game:
         }
 
+        switch &s in game_state {
+        case TitleScreen:
+        case LevelEditor:
+            tile := &level_editor.toolbox[3][0].(TopCannonTile)
+            if tile.angle_dir == 0 do tile.angle_dir = 1
+            tile.angle += tile.angle_dir
+            if tile.angle < 0 || tile.angle > 180 do tile.angle_dir *= -1
+            //fmt.println(tile.angle)
+            /*
+            for y in 0..<MAP_HEIGHT do for x in 0..<MAP_WIDTH {
+                if level_editor.level_map[y][x]
+            }
+                */
+        case Game:
+        }
+
         rl.BeginDrawing()
         rl.ClearBackground(rl.BLACK)
 
@@ -159,7 +182,7 @@ draw_editor_grid :: proc() {
 draw_editor_map :: proc(editor: ^LevelEditor) {
     for y in 0..<i32(MAP_HEIGHT) {
         for x in 0..<i32(MAP_WIDTH) {
-            switch tile in editor.level_map[y][x] {
+            switch &tile in editor.level_map[y][x] {
             case EmptyTile:
             case LandTile:
                 rl.DrawRectangle(MARGIN+x*CELL_SIZE, MARGIN+y*CELL_SIZE, CELL_SIZE, CELL_SIZE, rl.RED)
@@ -195,6 +218,19 @@ draw_editor_map :: proc(editor: ^LevelEditor) {
                 x3 := x1
                 y3 := y2
                 rl.DrawTriangle({x1, y1}, {x2, y2}, {x3, y3}, rl.RED)
+            case TopCannonTile:
+                rx := f32(MARGIN+x*CELL_SIZE) + CELL_SIZE/4
+                ry := f32(MARGIN+y*CELL_SIZE)
+                rw := f32(CELL_SIZE/2)
+                rh := f32(CELL_SIZE/4)
+                rl.DrawRectangleRec({rx, ry, rw, rh}, rl.BLUE)
+                cx := f32(MARGIN+x*CELL_SIZE) + CELL_SIZE/2
+                cy := f32(MARGIN+y*CELL_SIZE) + CELL_SIZE/4
+                rl.DrawCircleV({cx, cy}, CELL_SIZE/4, rl.BLUE)
+                ct := &editor.toolbox[3][0].(TopCannonTile)
+                dx := cx + 30 * math.cos(ct.angle*rl.DEG2RAD)
+                dy := cy + 30 * math.sin(ct.angle*rl.DEG2RAD)
+                rl.DrawLineEx({cx, cy}, {dx, dy}, 3, rl.BLUE)
             }
         }
     }
@@ -262,4 +298,5 @@ init_toolbox :: proc(editor: ^LevelEditor) {
     editor.toolbox[1][1] = NETriangleTile{}
     editor.toolbox[2][0] = SWTriangleTile{}
     editor.toolbox[2][1] = SETriangleTile{}
+    editor.toolbox[3][0] = TopCannonTile{}
 }
