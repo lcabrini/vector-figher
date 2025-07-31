@@ -76,9 +76,6 @@ main :: proc() {
         }
     }
 
-    // Temporary
-    level_editor.level_map[2][3] = LandTile{}
-
     game_state: GameState = level_editor
 
     for !rl.WindowShouldClose() {
