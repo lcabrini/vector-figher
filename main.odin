@@ -48,7 +48,7 @@ TitleScreen :: struct {}
 LevelEditor :: struct {
     toolbox: [25][2]Tile,
     current_tile: Tile,
-    level_map: [MAP_HEIGHT][MAP_WIDTH]Tile,
+    level_map: [][]Tile,
     camera: rl.Camera2D,
 }
 
@@ -72,7 +72,11 @@ main :: proc() {
     rl.SetTargetFPS(60)
 
     level_editor := LevelEditor{}
-    //level_editor.level_map = make()
+    level_editor.level_map = make([][]Tile, MAP_HEIGHT)
+    for y in 0..<MAP_HEIGHT {
+        level_editor.level_map[y] = make([]Tile, MAP_WIDTH)
+    }
+
     init_toolbox(&level_editor)
     level_editor.current_tile = EmptyTile{}
     level_editor.camera = rl.Camera2D{}
