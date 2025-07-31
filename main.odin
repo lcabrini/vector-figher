@@ -122,7 +122,6 @@ main :: proc() {
                 } else {
                     cell_x := int(level_editor.camera.target.x + mp.x) / (CELL_SIZE+1)
                     cell_y := int(level_editor.camera.target.y + mp.y) / (CELL_SIZE+1)
-                    fmt.println(level_editor.camera.target)
                     switch tile in level_editor.current_tile {
                     case TopCannonTile:
                         level_editor.level_map[cell_y][cell_x] = TopCannonTile{}
@@ -153,8 +152,10 @@ main :: proc() {
             for y in 0..<MAP_HEIGHT do for x in 0..<MAP_WIDTH {
                 switch &tile in level_editor.level_map[y][x] {
                     case TopCannonTile:
-                        ox := level_editor.camera.offset.x * CELL_SIZE * 2
-                        oy := level_editor.camera.offset.y * CELL_SIZE * 2
+                        //cell_x := int(level_editor.camera.target.x + mp.x) / (CELL_SIZE+1)
+                        //cell_y := int(level_editor.camera.target.y + mp.y) / (CELL_SIZE+1)
+                        ox := level_editor.camera.target.x
+                        oy := level_editor.camera.offset.y
                         mp := rl.GetMousePosition() + {ox, oy}
                         cx := f32(MARGIN+x*CELL_SIZE) + CELL_SIZE/2
                         cy := f32(MARGIN+y*CELL_SIZE) + CELL_SIZE/4
