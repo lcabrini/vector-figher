@@ -112,6 +112,15 @@ main :: proc() {
                     level_editor.level_map[cell_y][cell_x] = level_editor.current_tile
                 }
             }
+
+            if rl.IsMouseButtonDown(rl.MouseButton.RIGHT) {
+                mp := rl.GetMousePosition()
+                if mp.x <= f32(settings.screen_width-TOOL_SIZE*2+4) {
+                    cell_x := int(level_editor.camera.offset.x + mp.x / CELL_SIZE)
+                    cell_y := int(level_editor.camera.offset.y + mp.y / CELL_SIZE)
+                    level_editor.level_map[cell_y][cell_x] = EmptyTile{}
+                }
+            }
         case Game:
         }
 
