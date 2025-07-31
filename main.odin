@@ -122,7 +122,18 @@ main :: proc() {
                 } else {
                     cell_x := int(level_editor.camera.offset.x + mp.x / CELL_SIZE)
                     cell_y := int(level_editor.camera.offset.y + mp.y / CELL_SIZE)
-                    level_editor.level_map[cell_y][cell_x] = level_editor.current_tile
+                    switch tile in level_editor.current_tile {
+                    case TopCannonTile:
+                        level_editor.level_map[cell_y][cell_x] = TopCannonTile{}
+                    case EmptyTile: level_editor.level_map[cell_y][cell_x] = level_editor.current_tile
+                    case LandTile: level_editor.level_map[cell_y][cell_x] = level_editor.current_tile
+                    case NWTriangleTile: level_editor.level_map[cell_y][cell_x] = level_editor.current_tile
+                    case NETriangleTile: level_editor.level_map[cell_y][cell_x] = level_editor.current_tile
+                    case SWTriangleTile: level_editor.level_map[cell_y][cell_x] = level_editor.current_tile
+                    case SETriangleTile: level_editor.level_map[cell_y][cell_x] = level_editor.current_tile
+                    }
+
+
                 }
             }
 
@@ -140,16 +151,26 @@ main :: proc() {
         switch &s in game_state {
         case TitleScreen:
         case LevelEditor:
-            tile := &level_editor.toolbox[3][0].(TopCannonTile)
-            if tile.angle_dir == 0 do tile.angle_dir = 1
-            tile.angle += tile.angle_dir
-            if tile.angle < 0 || tile.angle > 180 do tile.angle_dir *= -1
-            //fmt.println(tile.angle)
-            /*
             for y in 0..<MAP_HEIGHT do for x in 0..<MAP_WIDTH {
-                if level_editor.level_map[y][x]
+                switch &tile in level_editor.level_map[y][x] {
+                    case TopCannonTile:
+                        ox := level_editor.camera.offset.x * CELL_SIZE * 2
+                        oy := level_editor.camera.offset.y * CELL_SIZE * 2
+                        fmt.println(ox)
+                        mp := rl.GetMousePosition() + {ox, oy}
+                        cx := f32(MARGIN+x*CELL_SIZE) + CELL_SIZE/2 //+ ox
+                        cy := f32(MARGIN+y*CELL_SIZE) + CELL_SIZE/4 //+ oy
+                        tile.angle = math.atan2(mp.y-cy, mp.x-cx)
+                        if tile.angle < 0 do tile.angle = 0
+                        if tile.angle > math.PI do tile.angle = math.PI
+                    case EmptyTile:
+                    case LandTile:
+                    case NWTriangleTile:
+                    case NETriangleTile:
+                    case SWTriangleTile:
+                    case SETriangleTile:
+                }
             }
-                */
         case Game:
         }
 
@@ -231,9 +252,9 @@ draw_editor_map :: proc(editor: ^LevelEditor) {
                 cx := f32(MARGIN+x*CELL_SIZE) + CELL_SIZE/2
                 cy := f32(MARGIN+y*CELL_SIZE) + CELL_SIZE/4
                 rl.DrawCircleV({cx, cy}, CELL_SIZE/4, rl.BLUE)
-                ct := &editor.toolbox[3][0].(TopCannonTile)
-                dx := cx + (CELL_SIZE/2 - 5) * math.cos(ct.angle*rl.DEG2RAD)
-                dy := cy + (CELL_SIZE/2 - 5) * math.sin(ct.angle*rl.DEG2RAD)
+                ct := editor.level_map[y][x].(TopCannonTile)
+                dx := cx + (CELL_SIZE/2 - 5) * math.cos(tile.angle)
+                dy := cy + (CELL_SIZE/2 - 5) * math.sin(tile.angle)
                 rl.DrawLineEx({cx, cy}, {dx, dy}, 3, rl.BLUE)
             }
         }
