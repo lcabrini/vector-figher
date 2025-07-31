@@ -232,8 +232,8 @@ draw_editor_map :: proc(editor: ^LevelEditor) {
                 cy := f32(MARGIN+y*CELL_SIZE) + CELL_SIZE/4
                 rl.DrawCircleV({cx, cy}, CELL_SIZE/4, rl.BLUE)
                 ct := &editor.toolbox[3][0].(TopCannonTile)
-                dx := cx + 30 * math.cos(ct.angle*rl.DEG2RAD)
-                dy := cy + 30 * math.sin(ct.angle*rl.DEG2RAD)
+                dx := cx + (CELL_SIZE/2 - 5) * math.cos(ct.angle*rl.DEG2RAD)
+                dy := cy + (CELL_SIZE/2 - 5) * math.sin(ct.angle*rl.DEG2RAD)
                 rl.DrawLineEx({cx, cy}, {dx, dy}, 3, rl.BLUE)
             }
         }
