@@ -120,8 +120,9 @@ main :: proc() {
                 if mp.x > f32(settings.screen_width-TOOL_SIZE*2+4) {
                     select_tool(&level_editor, &settings)
                 } else {
-                    cell_x := int(level_editor.camera.offset.x + mp.x / CELL_SIZE)
-                    cell_y := int(level_editor.camera.offset.y + mp.y / CELL_SIZE)
+                    cell_x := int(level_editor.camera.target.x + mp.x) / (CELL_SIZE+1)
+                    cell_y := int(level_editor.camera.target.y + mp.y) / (CELL_SIZE+1)
+                    fmt.println(level_editor.camera.target)
                     switch tile in level_editor.current_tile {
                     case TopCannonTile:
                         level_editor.level_map[cell_y][cell_x] = TopCannonTile{}
@@ -132,8 +133,6 @@ main :: proc() {
                     case SWTriangleTile: level_editor.level_map[cell_y][cell_x] = level_editor.current_tile
                     case SETriangleTile: level_editor.level_map[cell_y][cell_x] = level_editor.current_tile
                     }
-
-
                 }
             }
 
@@ -156,10 +155,9 @@ main :: proc() {
                     case TopCannonTile:
                         ox := level_editor.camera.offset.x * CELL_SIZE * 2
                         oy := level_editor.camera.offset.y * CELL_SIZE * 2
-                        fmt.println(ox)
                         mp := rl.GetMousePosition() + {ox, oy}
-                        cx := f32(MARGIN+x*CELL_SIZE) + CELL_SIZE/2 //+ ox
-                        cy := f32(MARGIN+y*CELL_SIZE) + CELL_SIZE/4 //+ oy
+                        cx := f32(MARGIN+x*CELL_SIZE) + CELL_SIZE/2
+                        cy := f32(MARGIN+y*CELL_SIZE) + CELL_SIZE/4
                         tile.angle = math.atan2(mp.y-cy, mp.x-cx)
                         if tile.angle < 0 do tile.angle = 0
                         if tile.angle > math.PI do tile.angle = math.PI
