@@ -40,6 +40,7 @@ Tile :: union {
 TitleScreen :: struct {}
 
 LevelEditor :: struct {
+    toolbox: [25][2]Tile,
     current_tile: Tile,
     level_map: [MAP_HEIGHT][MAP_WIDTH]Tile,
     camera: rl.Camera2D,
@@ -65,6 +66,7 @@ main :: proc() {
     rl.SetTargetFPS(60)
 
     level_editor := LevelEditor{}
+    init_toolbox(&level_editor)
     level_editor.current_tile = EmptyTile{}
     level_editor.camera = rl.Camera2D{}
     level_editor.camera.zoom = 1
@@ -199,11 +201,20 @@ draw_editor_map :: proc(editor: ^LevelEditor) {
 }
 
 draw_editor_toolbox :: proc(editor: ^LevelEditor, settings: ^Settings) {
-    rl.DrawRectangleLines(settings.screen_width-TOOL_SIZE*2-4, 0, TOOL_SIZE*2+4, settings.screen_height-1, rl.WHITE )
-    rl.DrawRectangle(settings.screen_width-TOOL_SIZE*2-3, 1, TOOL_SIZE*2+2, settings.screen_height-2, rl.BLUE)
-    rl.DrawLine(settings.screen_width-TOOL_SIZE-2, 0, settings.screen_width-TOOL_SIZE-2, settings.screen_height, rl.WHITE)
-    for y: i32 = 1; y < settings.screen_height-1; y += TOOL_SIZE {
-        rl.DrawLine(settings.screen_width-TOOL_SIZE*2-3, y, settings.screen_width-1, y, rl.WHITE)
+    rl.DrawRectangleLines(settings.screen_width-TOOL_SIZE*2, 0, TOOL_SIZE*2, settings.screen_height-1, rl.WHITE)
+    rl.DrawRectangle(settings.screen_width-TOOL_SIZE*2, 1, TOOL_SIZE*2-1, settings.screen_height-2, rl.BLUE)
+    rl.DrawLine(settings.screen_width-TOOL_SIZE, 0, settings.screen_width-TOOL_SIZE, settings.screen_height-1, rl.WHITE)
+    for y: i32 = 0; y < settings.screen_height; y += TOOL_SIZE {
+        rl.DrawLine(settings.screen_width-TOOL_SIZE*2, y, settings.screen_width-1, y, rl.WHITE)
+    }
+
+    switch tool in editor.current_tile {
+    case EmptyTile: rl.DrawRectangle(settings.screen_width-TOOL_SIZE*2, 1, TOOL_SIZE-1, TOOL_SIZE-1, rl.ORANGE)
+    case LandTile: rl.DrawRectangle(settings.screen_width-TOOL_SIZE, 1, TOOL_SIZE-1, TOOL_SIZE-1, rl.ORANGE)
+    case NWTriangleTile: rl.DrawRectangle(settings.screen_width-TOOL_SIZE*2, TOOL_SIZE+1, TOOL_SIZE-1, TOOL_SIZE-1, rl.ORANGE)
+    case NETriangleTile: rl.DrawRectangle(settings.screen_width-TOOL_SIZE, TOOL_SIZE+1, TOOL_SIZE-1, TOOL_SIZE-1, rl.ORANGE)
+    case SWTriangleTile:
+    case SETriangleTile:
     }
 }
 
@@ -212,7 +223,9 @@ select_tool :: proc(editor: ^LevelEditor, settings: ^Settings) {
     x := 1 - (settings.screen_width - i32(mp.x)) / TOOL_SIZE
     y := i32(mp.y) / TOOL_SIZE
     tool: [2]i32 = {x, y}
+    editor.current_tile = editor.toolbox[y][x]
 
+    /*
     switch tool {
         case {0, 0}: editor.current_tile = EmptyTile{}
         case {1, 0}: editor.current_tile = LandTile{}
@@ -221,4 +234,14 @@ select_tool :: proc(editor: ^LevelEditor, settings: ^Settings) {
         case {0, 2}: editor.current_tile = SWTriangleTile{}
         case {1, 2}: editor.current_tile = SETriangleTile{}
     }
+    */
+}
+
+init_toolbox :: proc(editor: ^LevelEditor) {
+    editor.toolbox[0][0] = EmptyTile{}
+    editor.toolbox[0][1] = LandTile{}
+    editor.toolbox[1][0] = NWTriangleTile{}
+    editor.toolbox[1][1] = NETriangleTile{}
+    editor.toolbox[2][0] = SWTriangleTile{}
+    editor.toolbox[2][1] = SETriangleTile{}
 }
