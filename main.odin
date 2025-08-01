@@ -21,6 +21,7 @@ Ship :: struct {
     a: f32,
 }
 
+ShipTile :: struct {}
 EmptyTile :: struct {}
 LandTile :: struct {}
 NWTriangleTile :: struct {}
@@ -38,6 +39,7 @@ BottomCannonTile :: struct {
 
 Tile :: union {
     EmptyTile,
+    ShipTile,
     LandTile,
     NWTriangleTile,
     NETriangleTile,
@@ -54,6 +56,7 @@ LevelEditor :: struct {
     current_tile: Tile,
     level_map: [][]Tile,
     camera: rl.Camera2D,
+    ship_placed: bool,
 }
 
 Game :: struct {}
@@ -127,6 +130,7 @@ main :: proc() {
                     cell_x := int(level_editor.camera.target.x + mp.x) / (CELL_SIZE+1)
                     cell_y := int(level_editor.camera.target.y + mp.y) / (CELL_SIZE+1)
                     switch tile in level_editor.current_tile {
+                    case ShipTile:
                     case TopCannonTile:
                         level_editor.level_map[cell_y][cell_x] = TopCannonTile{}
                     case BottomCannonTile:
@@ -212,6 +216,7 @@ draw_editor_map :: proc(editor: ^LevelEditor) {
     for y in 0..<i32(MAP_HEIGHT) {
         for x in 0..<i32(MAP_WIDTH) {
             switch &tile in editor.level_map[y][x] {
+            case ShipTile:
             case EmptyTile:
             case LandTile:
                 rl.DrawRectangle(MARGIN+x*CELL_SIZE, MARGIN+y*CELL_SIZE, CELL_SIZE, CELL_SIZE, rl.RED)
