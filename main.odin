@@ -53,7 +53,7 @@ TitleScreen :: struct {}
 
 LevelEditor :: struct {
     toolbox: [25][2]Tile,
-    current_tile: Tile,
+    current_tool: Tile,
     level_map: [][]Tile,
     camera: rl.Camera2D,
     ship_placed: bool,
@@ -85,7 +85,7 @@ main :: proc() {
     }
 
     init_toolbox(&level_editor)
-    level_editor.current_tile = EmptyTile{}
+    level_editor.current_tool = EmptyTile{}
     level_editor.camera = rl.Camera2D{}
     level_editor.camera.zoom = 1
     level_editor.camera.offset = {0, 0}
@@ -129,18 +129,18 @@ main :: proc() {
                 } else {
                     cell_x := int(level_editor.camera.target.x + mp.x) / (CELL_SIZE+1)
                     cell_y := int(level_editor.camera.target.y + mp.y) / (CELL_SIZE+1)
-                    switch tile in level_editor.current_tile {
+                    switch tile in level_editor.current_tool {
                     case ShipTile:
                     case TopCannonTile:
                         level_editor.level_map[cell_y][cell_x] = TopCannonTile{}
                     case BottomCannonTile:
                         level_editor.level_map[cell_y][cell_x] = BottomCannonTile{}
-                    case EmptyTile: level_editor.level_map[cell_y][cell_x] = level_editor.current_tile
-                    case LandTile: level_editor.level_map[cell_y][cell_x] = level_editor.current_tile
-                    case NWTriangleTile: level_editor.level_map[cell_y][cell_x] = level_editor.current_tile
-                    case NETriangleTile: level_editor.level_map[cell_y][cell_x] = level_editor.current_tile
-                    case SWTriangleTile: level_editor.level_map[cell_y][cell_x] = level_editor.current_tile
-                    case SETriangleTile: level_editor.level_map[cell_y][cell_x] = level_editor.current_tile
+                    case EmptyTile: level_editor.level_map[cell_y][cell_x] = level_editor.current_tool
+                    case LandTile: level_editor.level_map[cell_y][cell_x] = level_editor.current_tool
+                    case NWTriangleTile: level_editor.level_map[cell_y][cell_x] = level_editor.current_tool
+                    case NETriangleTile: level_editor.level_map[cell_y][cell_x] = level_editor.current_tool
+                    case SWTriangleTile: level_editor.level_map[cell_y][cell_x] = level_editor.current_tool
+                    case SETriangleTile: level_editor.level_map[cell_y][cell_x] = level_editor.current_tool
                     }
                 }
             }
@@ -294,7 +294,7 @@ draw_editor_toolbox :: proc(editor: ^LevelEditor, settings: ^Settings) {
     }
 
     for y in 0..<i32(25) do for x in 0..<i32(2) {
-        if editor.toolbox[y][x] == editor.current_tile {
+        if editor.toolbox[y][x] == editor.current_tool {
             rl.DrawRectangle(w-TOOL_SIZE*(2-x), y*TOOL_SIZE, TOOL_SIZE-1, TOOL_SIZE-1, rl.ORANGE)
             break
         }
@@ -353,7 +353,7 @@ select_tool :: proc(editor: ^LevelEditor, settings: ^Settings) {
     mp := rl.GetMousePosition()
     x := 1 - (settings.screen_width - i32(mp.x)) / TOOL_SIZE
     y := i32(mp.y) / TOOL_SIZE
-    editor.current_tile = editor.toolbox[y][x]
+    editor.current_tool = editor.toolbox[y][x]
 }
 
 init_toolbox :: proc(editor: ^LevelEditor) {
