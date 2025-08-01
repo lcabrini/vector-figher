@@ -224,71 +224,71 @@ draw_editor_grid :: proc() {
 
 draw_editor_map :: proc(editor: ^LevelEditor) {
     for y in 0..<i32(MAP_HEIGHT) do for x in 0..<i32(MAP_WIDTH) {
-            switch &tile in editor.level_map[y][x] {
-            case ShipTile:
-            case EmptyTile:
-            case LandTile:
-                rl.DrawRectangle(MARGIN+x*CELL_SIZE, MARGIN+y*CELL_SIZE, CELL_SIZE, CELL_SIZE, rl.RED)
-            case NWTriangleTile:
-                x1 := f32(MARGIN+x*CELL_SIZE)
-                y1 := f32(MARGIN+y*CELL_SIZE)
-                x2 := x1
-                y2 := y1+CELL_SIZE
-                x3 := x1+CELL_SIZE
-                y3 := y1
-                rl.DrawTriangle({x1, y1}, {x2, y2}, {x3, y3}, rl.RED)
-            case NETriangleTile:
-                x1 := f32(MARGIN+x*CELL_SIZE)
-                y1 := f32(MARGIN+y*CELL_SIZE)
-                x2 := x1+CELL_SIZE
-                y2 := y1+CELL_SIZE
-                x3 := x1+CELL_SIZE
-                y3 := y1
-                rl.DrawTriangle({x1, y1}, {x2, y2}, {x3, y3}, rl.RED)
-            case SWTriangleTile:
-                x1 := f32(MARGIN+x*CELL_SIZE)
-                y1 := f32(MARGIN+y*CELL_SIZE)
-                x2 := x1
-                y2 := y1+CELL_SIZE
-                x3 := x1+CELL_SIZE
-                y3 := y2
-                rl.DrawTriangle({x1, y1}, {x2, y2}, {x3, y3}, rl.RED)
-            case SETriangleTile:
-                x1 := f32(MARGIN+x*CELL_SIZE) + CELL_SIZE
-                y1 := f32(MARGIN+y*CELL_SIZE)
-                x2 := x1-CELL_SIZE
-                y2 := y1+CELL_SIZE
-                x3 := x1
-                y3 := y2
-                rl.DrawTriangle({x1, y1}, {x2, y2}, {x3, y3}, rl.RED)
-            case TopCannonTile:
-                rx := f32(MARGIN+x*CELL_SIZE) + CELL_SIZE/4
-                ry := f32(MARGIN+y*CELL_SIZE)
-                rw := f32(CELL_SIZE/2)
-                rh := f32(CELL_SIZE/4)
-                rl.DrawRectangleRec({rx, ry, rw, rh}, rl.BLUE)
-                cx := f32(MARGIN+x*CELL_SIZE) + CELL_SIZE/2
-                cy := f32(MARGIN+y*CELL_SIZE) + CELL_SIZE/4
-                rl.DrawCircleV({cx, cy}, CELL_SIZE/4, rl.BLUE)
-                ct := editor.level_map[y][x].(TopCannonTile)
-                dx := cx + (CELL_SIZE/2 - 5) * math.cos(tile.angle)
-                dy := cy + (CELL_SIZE/2 - 5) * math.sin(tile.angle)
-                rl.DrawLineEx({cx, cy}, {dx, dy}, 3, rl.BLUE)
-            case BottomCannonTile:
-                rx := f32(MARGIN+x*CELL_SIZE) + CELL_SIZE/4
-                ry := f32(MARGIN+y*CELL_SIZE) + 3*CELL_SIZE/4
-                rw := f32(CELL_SIZE/2)
-                rh := f32(CELL_SIZE/4)
-                rl.DrawRectangleRec({rx, ry, rw, rh}, rl.BLUE)
-                cx := f32(MARGIN+x*CELL_SIZE) + CELL_SIZE/2
-                cy := f32(MARGIN+y*CELL_SIZE) + 3*CELL_SIZE/4
-                rl.DrawCircleV({cx, cy}, CELL_SIZE/4, rl.BLUE)
-                ct := editor.level_map[y][x].(BottomCannonTile)
-                lx := cx + (CELL_SIZE/2 - 5) * math.cos(tile.angle)
-                ly := cy - (CELL_SIZE/2 - 5) * math.sin(tile.angle)
-                rl.DrawLineEx({cx, cy}, {lx, ly}, 3, rl.BLUE)
-            }
+        switch &tile in editor.level_map[y][x] {
+        case ShipTile:
+        case EmptyTile:
+        case LandTile:
+            rl.DrawRectangle(MARGIN+x*CELL_SIZE, MARGIN+y*CELL_SIZE, CELL_SIZE, CELL_SIZE, rl.RED)
+        case NWTriangleTile:
+            x1 := f32(MARGIN+x*CELL_SIZE)
+            y1 := f32(MARGIN+y*CELL_SIZE)
+            x2 := x1
+            y2 := y1+CELL_SIZE
+            x3 := x1+CELL_SIZE
+            y3 := y1
+            rl.DrawTriangle({x1, y1}, {x2, y2}, {x3, y3}, rl.RED)
+        case NETriangleTile:
+            x1 := f32(MARGIN+x*CELL_SIZE)
+            y1 := f32(MARGIN+y*CELL_SIZE)
+            x2 := x1+CELL_SIZE
+            y2 := y1+CELL_SIZE
+            x3 := x1+CELL_SIZE
+            y3 := y1
+            rl.DrawTriangle({x1, y1}, {x2, y2}, {x3, y3}, rl.RED)
+        case SWTriangleTile:
+            x1 := f32(MARGIN+x*CELL_SIZE)
+            y1 := f32(MARGIN+y*CELL_SIZE)
+            x2 := x1
+            y2 := y1+CELL_SIZE
+            x3 := x1+CELL_SIZE
+            y3 := y2
+            rl.DrawTriangle({x1, y1}, {x2, y2}, {x3, y3}, rl.RED)
+        case SETriangleTile:
+            x1 := f32(MARGIN+x*CELL_SIZE) + CELL_SIZE
+            y1 := f32(MARGIN+y*CELL_SIZE)
+            x2 := x1-CELL_SIZE
+            y2 := y1+CELL_SIZE
+            x3 := x1
+            y3 := y2
+            rl.DrawTriangle({x1, y1}, {x2, y2}, {x3, y3}, rl.RED)
+        case TopCannonTile:
+            rx := f32(MARGIN+x*CELL_SIZE) + CELL_SIZE/4
+            ry := f32(MARGIN+y*CELL_SIZE)
+            rw := f32(CELL_SIZE/2)
+            rh := f32(CELL_SIZE/4)
+            rl.DrawRectangleRec({rx, ry, rw, rh}, rl.BLUE)
+            cx := f32(MARGIN+x*CELL_SIZE) + CELL_SIZE/2
+            cy := f32(MARGIN+y*CELL_SIZE) + CELL_SIZE/4
+            rl.DrawCircleV({cx, cy}, CELL_SIZE/4, rl.BLUE)
+            ct := editor.level_map[y][x].(TopCannonTile)
+            dx := cx + (CELL_SIZE/2 - 5) * math.cos(tile.angle)
+            dy := cy + (CELL_SIZE/2 - 5) * math.sin(tile.angle)
+            rl.DrawLineEx({cx, cy}, {dx, dy}, 3, rl.BLUE)
+        case BottomCannonTile:
+            rx := f32(MARGIN+x*CELL_SIZE) + CELL_SIZE/4
+            ry := f32(MARGIN+y*CELL_SIZE) + 3*CELL_SIZE/4
+            rw := f32(CELL_SIZE/2)
+            rh := f32(CELL_SIZE/4)
+            rl.DrawRectangleRec({rx, ry, rw, rh}, rl.BLUE)
+            cx := f32(MARGIN+x*CELL_SIZE) + CELL_SIZE/2
+            cy := f32(MARGIN+y*CELL_SIZE) + 3*CELL_SIZE/4
+            rl.DrawCircleV({cx, cy}, CELL_SIZE/4, rl.BLUE)
+            ct := editor.level_map[y][x].(BottomCannonTile)
+            lx := cx + (CELL_SIZE/2 - 5) * math.cos(tile.angle)
+            ly := cy - (CELL_SIZE/2 - 5) * math.sin(tile.angle)
+            rl.DrawLineEx({cx, cy}, {lx, ly}, 3, rl.BLUE)
         }
+    }
 
     rl.DrawRectangleLines(MARGIN+editor.active_tile.x*CELL_SIZE, MARGIN+editor.active_tile.y*CELL_SIZE, CELL_SIZE, CELL_SIZE, rl.YELLOW)
 }
