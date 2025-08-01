@@ -30,7 +30,10 @@ SETriangleTile :: struct {}
 
 TopCannonTile :: struct {
     angle: f32,
-    angle_dir: f32,
+}
+
+BottomCannonTile :: struct {
+    angle: f32,
 }
 
 Tile :: union {
@@ -41,6 +44,7 @@ Tile :: union {
     SWTriangleTile,
     SETriangleTile,
     TopCannonTile,
+    BottomCannonTile,
 }
 
 TitleScreen :: struct {}
@@ -125,6 +129,8 @@ main :: proc() {
                     switch tile in level_editor.current_tile {
                     case TopCannonTile:
                         level_editor.level_map[cell_y][cell_x] = TopCannonTile{}
+                    case BottomCannonTile:
+                        level_editor.level_map[cell_y][cell_x] = BottomCannonTile{}
                     case EmptyTile: level_editor.level_map[cell_y][cell_x] = level_editor.current_tile
                     case LandTile: level_editor.level_map[cell_y][cell_x] = level_editor.current_tile
                     case NWTriangleTile: level_editor.level_map[cell_y][cell_x] = level_editor.current_tile
@@ -159,6 +165,7 @@ main :: proc() {
                         cy := f32(MARGIN+y*CELL_SIZE) + CELL_SIZE/4
                         tile.angle = math.atan2(mp.y-cy, mp.x-cx)
                         if tile.angle < 0 do tile.angle = cx < mp.x ? 0 : math.PI
+                    case BottomCannonTile:
                     case EmptyTile:
                     case LandTile:
                     case NWTriangleTile:
@@ -252,6 +259,8 @@ draw_editor_map :: proc(editor: ^LevelEditor) {
                 dx := cx + (CELL_SIZE/2 - 5) * math.cos(tile.angle)
                 dy := cy + (CELL_SIZE/2 - 5) * math.sin(tile.angle)
                 rl.DrawLineEx({cx, cy}, {dx, dy}, 3, rl.BLUE)
+            case BottomCannonTile:
+
             }
         }
     }
@@ -303,6 +312,7 @@ draw_editor_toolbox :: proc(editor: ^LevelEditor, settings: ^Settings) {
     x3 = x1
     y3 = y2
     rl.DrawTriangle({x1, y1}, {x2, y2}, {x3, y3}, rl.WHITE)
+    // Top cannon
     x1 = f32(w) - TOOL_SIZE*2 + 3
     y1 = 3*TOOL_SIZE + 4
     w1: f32 = TOOL_SIZE - 8
@@ -313,6 +323,13 @@ draw_editor_toolbox :: proc(editor: ^LevelEditor, settings: ^Settings) {
     r1 := f32(TOOL_SIZE/3)
     rl.DrawCircleV({x1, y1}, r1, rl.WHITE)
     rl.DrawLineV({x1, y1}, {x1+10, y1+10}, rl.WHITE)
+    // Bottom cannon
+    x1 = f32(w) - TOOL_SIZE + 4 + TOOL_SIZE/3
+    y1 = 3*TOOL_SIZE + 8 + TOOL_SIZE/3
+    rl.DrawCircleV({x1, y1}, r1, rl.WHITE)
+    rl.DrawLineV({x1, y1}, {x1-10, y1-10}, rl.WHITE)
+    x1 -= TOOL_SIZE/3 + 1
+    rl.DrawRectangleRec({x1, y1, w1, h1}, rl.WHITE)
 }
 
 select_tool :: proc(editor: ^LevelEditor, settings: ^Settings) {
@@ -330,4 +347,5 @@ init_toolbox :: proc(editor: ^LevelEditor) {
     editor.toolbox[2][0] = SWTriangleTile{}
     editor.toolbox[2][1] = SETriangleTile{}
     editor.toolbox[3][0] = TopCannonTile{}
+    editor.toolbox[3][1] = BottomCannonTile{}
 }
