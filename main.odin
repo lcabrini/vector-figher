@@ -156,22 +156,23 @@ main :: proc() {
         case TitleScreen:
         case LevelEditor:
             for y in 0..<MAP_HEIGHT do for x in 0..<MAP_WIDTH {
-                switch &tile in level_editor.level_map[y][x] {
+                #partial switch &tile in level_editor.level_map[y][x] {
                     case TopCannonTile:
                         ox := level_editor.camera.target.x
-                        oy := level_editor.camera.offset.y
+                        oy := level_editor.camera.target.y
                         mp := rl.GetMousePosition() + {ox, oy}
                         cx := f32(MARGIN+x*CELL_SIZE) + CELL_SIZE/2
                         cy := f32(MARGIN+y*CELL_SIZE) + CELL_SIZE/4
                         tile.angle = math.atan2(mp.y-cy, mp.x-cx)
                         if tile.angle < 0 do tile.angle = cx < mp.x ? 0 : math.PI
                     case BottomCannonTile:
-                    case EmptyTile:
-                    case LandTile:
-                    case NWTriangleTile:
-                    case NETriangleTile:
-                    case SWTriangleTile:
-                    case SETriangleTile:
+                        ox := level_editor.camera.target.x
+                        oy := level_editor.camera.target.y
+                        mp := rl.GetMousePosition() + {ox, oy}
+                        cx := f32(MARGIN+x*CELL_SIZE) + CELL_SIZE/2
+                        cy := f32(MARGIN+y*CELL_SIZE) + 3*CELL_SIZE/4
+                        tile.angle = math.atan2(cy-mp.y, mp.x-cx)
+                        if tile.angle < 0 do tile.angle = cx < mp.x ? 0 : math.PI
                 }
             }
         case Game:
@@ -260,7 +261,18 @@ draw_editor_map :: proc(editor: ^LevelEditor) {
                 dy := cy + (CELL_SIZE/2 - 5) * math.sin(tile.angle)
                 rl.DrawLineEx({cx, cy}, {dx, dy}, 3, rl.BLUE)
             case BottomCannonTile:
-
+                rx := f32(MARGIN+x*CELL_SIZE) + CELL_SIZE/4
+                ry := f32(MARGIN+y*CELL_SIZE) + 3*CELL_SIZE/4
+                rw := f32(CELL_SIZE/2)
+                rh := f32(CELL_SIZE/4)
+                rl.DrawRectangleRec({rx, ry, rw, rh}, rl.BLUE)
+                cx := f32(MARGIN+x*CELL_SIZE) + CELL_SIZE/2
+                cy := f32(MARGIN+y*CELL_SIZE) + 3*CELL_SIZE/4
+                rl.DrawCircleV({cx, cy}, CELL_SIZE/4, rl.BLUE)
+                ct := editor.level_map[y][x].(BottomCannonTile)
+                lx := cx + (CELL_SIZE/2 - 5) * math.cos(tile.angle)
+                ly := cy - (CELL_SIZE/2 - 5) * math.sin(tile.angle)
+                rl.DrawLineEx({cx, cy}, {lx, ly}, 3, rl.BLUE)
             }
         }
     }
