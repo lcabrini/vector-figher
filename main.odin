@@ -223,8 +223,7 @@ draw_editor_grid :: proc() {
 }
 
 draw_editor_map :: proc(editor: ^LevelEditor) {
-    for y in 0..<i32(MAP_HEIGHT) {
-        for x in 0..<i32(MAP_WIDTH) {
+    for y in 0..<i32(MAP_HEIGHT) do for x in 0..<i32(MAP_WIDTH) {
             switch &tile in editor.level_map[y][x] {
             case ShipTile:
             case EmptyTile:
@@ -290,7 +289,6 @@ draw_editor_map :: proc(editor: ^LevelEditor) {
                 rl.DrawLineEx({cx, cy}, {lx, ly}, 3, rl.BLUE)
             }
         }
-    }
 
     rl.DrawRectangleLines(MARGIN+editor.active_tile.x*CELL_SIZE, MARGIN+editor.active_tile.y*CELL_SIZE, CELL_SIZE, CELL_SIZE, rl.YELLOW)
 }
