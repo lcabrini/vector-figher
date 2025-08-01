@@ -303,6 +303,16 @@ draw_editor_toolbox :: proc(editor: ^LevelEditor, settings: ^Settings) {
     x3 = x1
     y3 = y2
     rl.DrawTriangle({x1, y1}, {x2, y2}, {x3, y3}, rl.WHITE)
+    x1 = f32(w) - TOOL_SIZE*2 + 3
+    y1 = 3*TOOL_SIZE + 4
+    w1: f32 = TOOL_SIZE - 8
+    h1: f32 = TOOL_SIZE / 3
+    rl.DrawRectangleRec({x1, y1, w1, h1}, rl.WHITE)
+    x1 = x1 + w1 / 2
+    y1 = y1 + h1
+    r1 := f32(TOOL_SIZE/3)
+    rl.DrawCircleV({x1, y1}, r1, rl.WHITE)
+    rl.DrawLineV({x1, y1}, {x1+10, y1+10}, rl.WHITE)
 }
 
 select_tool :: proc(editor: ^LevelEditor, settings: ^Settings) {
