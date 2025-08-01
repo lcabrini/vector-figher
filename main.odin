@@ -57,6 +57,7 @@ LevelEditor :: struct {
     level_map: [][]Tile,
     camera: rl.Camera2D,
     ship_placed: bool,
+    active_tile: [2]i32,
 }
 
 Game :: struct {}
@@ -102,6 +103,15 @@ main :: proc() {
         switch &s in game_state {
         case TitleScreen:
         case LevelEditor:
+            {
+                mp := rl.GetMousePosition()
+                if mp.x <= f32(settings.screen_width-TOOL_SIZE*2+4) {
+                    cell_x := i32(level_editor.camera.target.x + mp.x) / (CELL_SIZE+1)
+                    cell_y := i32(level_editor.camera.target.y + mp.y) / (CELL_SIZE+1)
+                    level_editor.active_tile = {cell_x, cell_y}
+                }
+            }
+
             if rl.IsKeyDown(.UP) {
                 level_editor.camera.offset.y -= 0.5
                 level_editor.camera.target.y -= CELL_SIZE/2
@@ -281,6 +291,8 @@ draw_editor_map :: proc(editor: ^LevelEditor) {
             }
         }
     }
+
+    rl.DrawRectangleLines(MARGIN+editor.active_tile.x*CELL_SIZE, MARGIN+editor.active_tile.y*CELL_SIZE, CELL_SIZE, CELL_SIZE, rl.YELLOW)
 }
 
 draw_editor_toolbox :: proc(editor: ^LevelEditor, settings: ^Settings) {
