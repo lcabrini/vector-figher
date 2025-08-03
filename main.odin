@@ -441,6 +441,24 @@ draw_editor_toolbox :: proc(editor: ^LevelEditor, settings: ^Settings) {
 	rl.DrawLineV({x1, y1}, {x1 - 10, y1 - 10}, rl.WHITE)
 	x1 -= TOOL_SIZE / 3 + 1
 	rl.DrawRectangleRec({x1, y1, w1, h1}, rl.WHITE)
+	// Left cannon
+	x1 = f32(w) - TOOL_SIZE * 2 + 3
+	y1 = 4 * TOOL_SIZE + 4
+	w1 = TOOL_SIZE / 3
+	h1 = TOOL_SIZE - 8
+	rl.DrawRectangleRec({x1, y1, w1, h1}, rl.WHITE)
+	x1 = x1 + w1
+	y1 = y1 + h1 / 2
+	r1 = TOOL_SIZE / 3
+	rl.DrawCircleV({x1, y1}, r1, rl.WHITE)
+	rl.DrawLineV({x1, y1}, {x1 + 10, y1 - 10}, rl.WHITE)
+	// Right cannon
+	x1 = f32(w) - TOOL_SIZE + 2 * TOOL_SIZE / 3 - 4
+	y1 = 4 * TOOL_SIZE + 4
+	rl.DrawRectangleRec({x1, y1, w1, h1}, rl.WHITE)
+	y1 = y1 + h1 / 2
+	rl.DrawCircleV({x1, y1}, r1, rl.WHITE)
+	rl.DrawLineV({x1, y1}, {x1 - 10, y1 + 10}, rl.WHITE)
 }
 
 select_tool :: proc(editor: ^LevelEditor, settings: ^Settings) {
