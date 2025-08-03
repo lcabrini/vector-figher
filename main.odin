@@ -37,6 +37,14 @@ BottomCannonTile :: struct {
 	angle: f32,
 }
 
+LeftCannonTile :: struct {
+	angle: f32,
+}
+
+RightCannonTile :: struct {
+	angle: f32,
+}
+
 Tile :: union {
 	EmptyTile,
 	ShipTile,
@@ -47,6 +55,8 @@ Tile :: union {
 	SETriangleTile,
 	TopCannonTile,
 	BottomCannonTile,
+	LeftCannonTile,
+	RightCannonTile,
 }
 
 TitleScreen :: struct {}
@@ -145,6 +155,10 @@ main :: proc() {
 						level_editor.level_map[cell_y][cell_x] = TopCannonTile{}
 					case BottomCannonTile:
 						level_editor.level_map[cell_y][cell_x] = BottomCannonTile{}
+					case LeftCannonTile:
+						level_editor.level_map[cell_y][cell_x] = LeftCannonTile{}
+					case RightCannonTile:
+						level_editor.level_map[cell_y][cell_x] = RightCannonTile{}
 					case EmptyTile:
 						level_editor.level_map[cell_y][cell_x] = level_editor.current_tool
 					case LandTile:
@@ -193,6 +207,22 @@ main :: proc() {
 					cy := f32(MARGIN + y * CELL_SIZE) + 3 * CELL_SIZE / 4
 					tile.angle = math.atan2(cy - mp.y, mp.x - cx)
 					if tile.angle < 0 do tile.angle = cx < mp.x ? 0 : math.PI
+				case LeftCannonTile:
+					ox := level_editor.camera.target.x
+					oy := level_editor.camera.target.y
+					mp := rl.GetMousePosition() + {ox, oy}
+					cx := f32(MARGIN + x * CELL_SIZE) + CELL_SIZE / 4
+					cy := f32(MARGIN + y * CELL_SIZE) + CELL_SIZE / 2
+					tile.angle = math.atan2(mp.y - cy, mp.x - cx)
+					if tile.angle < -math.PI / 2 || tile.angle > math.PI / 2 do tile.angle = cy < mp.y ? math.PI / 2 : -math.PI / 2
+				case RightCannonTile:
+					ox := level_editor.camera.target.x
+					oy := level_editor.camera.target.y
+					mp := rl.GetMousePosition() + {ox, oy}
+					cx := f32(MARGIN + x * CELL_SIZE) + 3 * CELL_SIZE / 4
+					cy := f32(MARGIN + y * CELL_SIZE) + CELL_SIZE / 2
+					tile.angle = math.atan2(cy - mp.y, cx - mp.x)
+					if math.abs(tile.angle) > math.PI / 2 do tile.angle = cy < mp.y ? -math.PI / 2 : math.PI / 2
 				}
 			}
 		case Game:
@@ -305,6 +335,30 @@ draw_editor_map :: proc(editor: ^LevelEditor) {
 			lx := cx + (CELL_SIZE / 2 - 5) * math.cos(tile.angle)
 			ly := cy - (CELL_SIZE / 2 - 5) * math.sin(tile.angle)
 			rl.DrawLineEx({cx, cy}, {lx, ly}, 3, rl.BLUE)
+		case LeftCannonTile:
+			rx := f32(MARGIN + x * CELL_SIZE)
+			ry := f32(MARGIN + y * CELL_SIZE) + CELL_SIZE / 4
+			rw := f32(CELL_SIZE / 4)
+			rh := f32(CELL_SIZE / 2)
+			rl.DrawRectangleRec({rx, ry, rw, rh}, rl.BLUE)
+			cx := f32(MARGIN + x * CELL_SIZE) + CELL_SIZE / 4
+			cy := f32(MARGIN + y * CELL_SIZE) + CELL_SIZE / 2
+			rl.DrawCircleV({cx, cy}, CELL_SIZE / 4, rl.BLUE)
+			lx := cx + (CELL_SIZE / 2 - 5) * math.cos(tile.angle)
+			ly := cy + (CELL_SIZE / 2 - 5) * math.sin(tile.angle)
+			rl.DrawLineEx({cx, cy}, {lx, ly}, 3, rl.BLUE)
+		case RightCannonTile:
+			rx := f32(MARGIN + x * CELL_SIZE) + 3 * CELL_SIZE / 4
+			ry := f32(MARGIN + y * CELL_SIZE) + CELL_SIZE / 4
+			rw := f32(CELL_SIZE / 4)
+			rh := f32(CELL_SIZE / 2)
+			rl.DrawRectangleRec({rx, ry, rw, rh}, rl.BLUE)
+			cx := f32(MARGIN + x * CELL_SIZE) + 3 * CELL_SIZE / 4
+			cy := f32(MARGIN + y * CELL_SIZE) + CELL_SIZE / 2
+			rl.DrawCircleV({cx, cy}, CELL_SIZE / 4, rl.BLUE)
+			lx := cx - (CELL_SIZE / 2 - 5) * math.cos(tile.angle)
+			ly := cy - (CELL_SIZE / 2 - 5) * math.sin(tile.angle)
+			rl.DrawLineEx({cx, cy}, {lx, ly}, 3, rl.BLUE)
 		}
 	}
 
@@ -405,4 +459,6 @@ init_toolbox :: proc(editor: ^LevelEditor) {
 	editor.toolbox[2][1] = SETriangleTile{}
 	editor.toolbox[3][0] = TopCannonTile{}
 	editor.toolbox[3][1] = BottomCannonTile{}
+	editor.toolbox[4][0] = LeftCannonTile{}
+	editor.toolbox[4][1] = RightCannonTile{}
 }
